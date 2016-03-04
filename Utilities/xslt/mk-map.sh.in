@@ -1,0 +1,78 @@
+#!/bin/sh
+# -----------------------------------------------
+# $Id: mk-map.sh.in,v 1.3 2009/02/25 10:46:27 pv Exp $
+# -----------------------------------------------
+top_builddir=@top_builddir@
+
+xmlfile=${top_builddir}/conf/configure.xml
+
+MMAP=
+APS=
+numAPS=
+SYSnm=
+IDLIST=
+IO=
+NM=
+NODES=
+PROG="${0##*/}"
+
+print_usage()
+{
+    [ "$1" = 0 ] || exec >&2
+    cat <<EOF
+Usage: $PROG [options] [xmlfile]
+
+$PROG 	- modbusmap include file generator
+xmlfile - source xml-file. Default valuse is 'configure.xml'
+
+Valid options are:
+  -h, --help	display help screen
+  -i, --id - generate ID list
+  -n, --nodes - generate Nodes list
+  -t, --name  - generate name list
+EOF
+    [ -n "$1" ] && exit "$1" || exit
+}
+
+#parse command line options
+TEMP=`getopt -n $PROG -o h,i,n,t -l help,id,nodes,name -- "$@"` || exit 1
+eval set -- "$TEMP"
+
+while :; do
+    case "$1" in
+	-h|--help) print_usage 0
+	    ;;
+
+	-i|--id)
+		IDLIST=1
+		break;
+		;;
+
+	-t|--name)
+		NM=1
+		break;
+		;;
+
+	-n|--nodes)
+		NODES=1
+		break;
+		;;
+
+	--) shift; break
+	;;
+
+	*) "unrecognized option: $1"
+	exit 1
+	;;
+    esac
+    shift
+done
+
+fname=$( basename $xmlfile )
+
+[ -n "$IDLIST" ] && xslfile=${top_builddir}/Utilities/xslt/idList.xsl
+[ -n "$NODES" ] && xslfile=${top_builddir}/Utilities/xslt/nodesList.xsl
+[ -n "$NM" ] && xslfile=${top_builddir}/Utilities/xslt/nameList.xsl
+
+
+xsltproc --stringparam FILENAME "${fname}" --stringparam SYS "${SYSnm}" $xslfile $xmlfile | grep -v '^[[:space:]]\{0,\}$' | sort -n

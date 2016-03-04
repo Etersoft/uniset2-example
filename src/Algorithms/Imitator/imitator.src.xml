@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	name 		- название класса
+	msgcount	- сколько сообщений обрабатывается за один раз
+	sleep_msec	- пауза между итерациями в работе процесса
+
+	type
+	====
+		in 	- входы (только для чтения)
+		out	- выходы (запись)
+-->
+<Imitator>
+  <settings>
+	<set name="class-name" val="Imitator"/>
+	<set name="msg-count" val="30"/>
+	<set name="sleep-msec" val="150"/>
+  </settings>
+  <variables>
+        <item name="stepVal" type="long" const="1" default="6" comment="Шаг наполнения (скорость)"/>
+        <item name="stepTime" type="long" const="1" default="500" comment="Время на один шаг, мсек"/>
+        <item name="minLevel" type="long" const="1" min="0" default="0" comment="минимальный разрешённый уровень"/>
+        <item name="maxLevel" type="long" const="1" max="100" default="100" comment="максимальный разрешённый уровень"/>
+  </variables>
+  <smap>
+		<item name="Level_s" vartype="out" iotype="AI" comment="Текущий уровень в цистерне"/>
+		<item name="cmdLoad_c" vartype="in" iotype="DO" comment="Команда начать заполнение"/>
+		<item name="cmdUnload_c" vartype="in" iotype="DO" comment="Команда начать 'опустошение'"/>
+  </smap>
+  <msgmap>
+  </msgmap>
+</Imitator>
+                                                                                                                              

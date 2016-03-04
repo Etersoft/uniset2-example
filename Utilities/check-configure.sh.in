@@ -1,0 +1,152 @@
+#!/bin/sh
+
+PROJECT=@PACKAGE@
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+datadir=@datadir@
+sysconfdir=@sysconfdir@
+top_builddir=@top_builddir@
+
+xmlfile=${top_builddir}/conf/configure.xml
+xslfile=${top_builddir}/Utilities/xslt/idList.xsl
+msgxslfile=${top_builddir}/Utilities/xslt/msgList.xsl
+emptyxslfile=${top_builddir}/Utilities/xslt/check-empty.xsl
+namexslfile=${top_builddir}/Utilities/xslt/nameList.xsl
+badidxslfile=${top_builddir}/Utilities/xslt/idBADList.xsl
+tcpregxslfile=${top_builddir}/Utilities/xslt/tcpreg.xsl
+
+RET=0
+PROG="${0##*/}"
+
+print_usage()
+{
+    [ "$1" = 0 ] || exec >&2
+    cat <<EOF
+Usage: $PROG [options] [xmlfile]
+
+$PROG 	- check duplicate modbusID
+xmlfile - source xml-file. Default valuse is 'configure.xml'
+
+Valid options are:
+  -h, --help	display help screen
+  -s, --system	use system directory for search xsl-files. (usr/share/@PACKAGE@/xslt)
+  -f, --file	Use xml file 'file'
+EOF
+    [ -n "$1" ] && exit "$1" || exit
+}
+
+#parse command line options
+TEMP=`getopt -n $PROG -o h,s,f:t: -l help,system,file,tcpreg: -- "$@"` || exit 1
+eval set -- "$TEMP"
+
+while :; do
+    case "$1" in
+	-h|--help) print_usage 0
+		;;	
+
+	-s|--system)
+		xmlfile=${sysconfdir}/${PROJECT}/configure.xml
+		xslfile=${datadir}/${PROJECT}/idList.xsl
+		msgxslfile=${datadir}/${PROJECT}/msgList.xsl
+		emptyxslfile=${datadir}/${PROJECT}/check-empty.xsl
+		namexslfile=${datadir}/${PROJECT}/nameList.xsl
+		badidxslfile=${datadir}/${PROJECT}/idBADList.xsl
+		tcpregxslfile=${datadir}/${PROJECT}/tcpreg.xsl
+		break
+	    ;;
+
+	-f|--file)
+		shift
+		xmlfile=$1
+		break
+	    ;;
+
+	--) shift; break
+	;;
+	*) "unrecognized option: $1"
+	exit 1
+	;;
+    esac
+    shift
+done
+
+function check_dup()
+{
+	RET=0
+	fxsl=$1
+	fxml=$2
+	[ -n "$3" ] && pname="$3" || pname="ID"
+
+	xsltproc $fxsl $fxml >/dev/null || { echo "Incorrect XML file" ; exit 1 ; }
+
+	DUPLIST=`xsltproc $fxsl $fxml | grep -v '^[[:space:]]\{0,\}$' | sort -r | uniq -c | sort -nr | grep -v "1 "`
+
+	if [ -n "${DUPLIST}" ]; then
+		RET=1
+		echo "Find duplicates:"
+		echo "[ count $pname ]"
+		echo "${DUPLIST}"
+	fi
+
+	return $RET
+}
+
+function check_empty_id()
+{
+	RET=0
+	fxsl=$1
+	fxml=$2
+
+	xsltproc $fxsl $fxml >/dev/null || { echo "Incorrect XML file" ; exit 1 ; }
+
+	DUPLIST=`xsltproc $fxsl $fxml | grep -v '^[[:space:]]\{0,\}$'`
+
+	if [ -n "${DUPLIST}" ]; then
+		RET=1
+		echo "Find empty id for:"
+		echo "${DUPLIST}"
+	fi
+
+	return $RET
+}
+
+function check_bad_id()
+{
+	RET=0
+	fxsl=$1
+	fxml=$2
+
+	xsltproc $fxsl $fxml >/dev/null || { echo "Incorrect XML file" ; exit 1 ; }
+
+	BADLIST=`xsltproc $fxsl $fxml | grep -v '^[[:space:]]\{0,\}$'`
+
+	if [ -n "${BADLIST}" ]; then
+		RET=1
+		echo "Find BAD id for:"
+		echo "${BADLIST}"
+	fi
+
+	return $RET
+}
+
+
+echo "CHECK empty id..."
+check_empty_id $emptyxslfile $xmlfile || exit 1
+
+echo "CHECK objects id..."
+check_dup $xslfile $xmlfile || exit 1
+
+echo "CHECK bad id..."
+check_bad_id $badidxslfile $xmlfile "ID" || exit 1
+
+
+echo "CHECK objects name..."
+check_dup $namexslfile $xmlfile "name" || exit 1
+
+echo "CHECK messages id..."
+check_dup $msgxslfile $xmlfile "MSG" || exit 1
+
+#echo "CHECK tcp_mbreg..."
+#check_dup $tcpregxslfile $xmlfile || exit 1

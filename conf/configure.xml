@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<UnisetExampleConfiguration>
+	<!-- Общие параметры по UniSet -->
+	<UniSet>
+		<LocalNode name="localhost"/>
+		<RootSection name="UNISET-EXAMPLE"/>
+		<ServicesSection name="Services"/>
+		<NameService host="localhost" port="2809"/>
+		<CountOfNet name="1"/>
+		<RepeatCount name="2"/>
+		<RepeatTimeoutMS name="50"/>
+		<SizeOfMessageQueue name="2000"/>
+		<PushMutexTimeout name="3000"/>
+		<RecvMutexTimeout name="2000"/>
+		<WatchDogTime name="0"/>
+		<PingNodeTime name="0"/>
+		<AutoStartUpTime name="1"/>
+		<SleepTickMS name="500"/>
+		<LocalIOR name="0"/>
+		<UniSetDebug name="ulog"/>
+		<ConfDir name="./"/>
+		<DataDir name="./"/>
+		<BinDir name="./"/>
+		<LogDir name="./"/>
+		<DocDir name="./"/>
+		<LockDir name="./"/>
+	</UniSet>
+	<dlog name="dlog"/>
+	<SharedMemory1 name="SharedMemory1"/>
+	<!--	
+		=================================================================
+		  <settings> - обязательная секция если для настройки используется uniset-configurator
+	-->
+	<settings>
+	   <Imitator name="Imitator1" Level_s="Level_AS" cmdLoad_c="CmdLoad_C" cmdUnload_c="CmdUnload_C"/>
+	   <Controller name="Controller1" HiLevel="90" OnControl_s="OnControl_S" Level_s="Level_AS" cmdLoad_c="CmdLoad_C" cmdUnload_c="CmdUnload_C"/>
+	</settings>
+	<ObjectsMap idfromfile="1" no_dep="0">
+		<nodes>
+			<item id="3000" ip="127.0.0.1" name="localhost" textname="Локальный узел"/>
+		</nodes>
+		<!-- ************************ Датчики ********************** -->
+		<sensors name="Sensors" no_check_depends="0" section="Sensors">
+			<item id="100" name="OnControl_S" iotype="DI" textname="Управление работой (1 - работать, 0 - не работать)"/>
+			<item id="101" name="Level_AS" iotype="AI" textname="Текущий уровень в цистерне"/>
+			<item id="102" name="CmdLoad_C" iotype="DO" textname="Команда на включение насоса 'наполнения'"/>
+			<item id="103" name="CmdUnload_C" iotype="DO" textname="Команда на включение насоса 'опустошения'"/>
+		</sensors>
+		<thresholds name="thresholds">
+		</thresholds>
+		<!-- ******************* Идентификаторы контроллеров ***************** -->
+		<controllers name="Controllers" section="Controllers">
+			<item id="22000" name="SharedMemory1"/>
+		</controllers>
+		<!-- ******************* Идентификаторы сервисов ***************** -->
+		<services name="Services" section="Services">
+			<item id="31001" name="DBServer1"/>
+		</services>
+		<!-- ******************* Идентификаторы объектов ***************** -->
+		<objects name="Objects" section="Objects">
+			<item id="20000" name="TestProc"/>
+			<item id="20001" name="Imitator1"/>
+			<item id="20002" name="Controller1"/>
+		</objects>
+	</ObjectsMap>
+</UnisetExampleConfiguration>

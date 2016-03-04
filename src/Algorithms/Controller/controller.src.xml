@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	name 		- название класса
+	msgcount	- сколько сообщений обрабатывается за один раз
+	sleep_msec	- пауза между итерациями в работе процесса
+
+	type
+	====
+		in 	- входы (только для чтения)
+		out	- выходы (запись)
+-->
+<Controller>
+  <settings>
+	<set name="class-name" val="Controller"/>
+	<set name="msg-count" val="30"/>
+	<set name="sleep-msec" val="150"/>
+  </settings>
+  <variables>
+		<item name="HiLevel" type="long" const="1" default="95" comment="Верхний порог срабатывания"/>
+		<item name="LowLevel" type="long" const="1" default="5" comment="Нижний порог срабатывания"/>
+  </variables>
+  <smap>
+        <item name="OnControl_s" vartype="in" iotype="DI" comment="Разрешение на работу"/>
+        <item name="Level_s" vartype="in" iotype="AI" comment="Текущий уровень в цистерне"/>
+        <item name="cmdLoad_c" vartype="out" iotype="DO" comment="Включить насос 'закачивающий'"/>
+        <item name="cmdUnload_c" vartype="out" iotype="DO" comment="Включить насос 'откачивающий'"/>
+  </smap>
+  <msgmap>
+  </msgmap>
+</Controller>
+                                                                                                                              
