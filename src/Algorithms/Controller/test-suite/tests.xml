@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestScenario>
+ <RunList after_run_pause="3000">
+   <item after_run_pause="500" chdir="../../../SharedMemory" name="SharedMemory" script="./start_fg.sh" silent_mode="1"/>
+   <item chdir="../../Imitator" name="imitator" script="./start_fg.sh" silent_mode="1"/>
+   <item chdir="../" name="controller" script="./start_fg.sh" silent_mode="1"/>
+ </RunList>
+ <TestList>
+  <test name="Stopped" comment="Проверка что без команды 'ничего не делаем'">
+   <action set="OnControl_S=0" comment="Снимаем команду 'начать работу'"/>
+   <check test="CmdLoad_C=0" comment="Проверка что команда 'наполнить' не меняется" holdtime="3000"/>
+   <check test="CmdUnload_C=0" comment="Проверка что команда 'опустошить' не меняется" holdtime="3000"/>
+   <check test="Level_AS=0" comment="Проверка что уровень не меняется" holdtime="6000"/>
+  </test>
+  <test name="Processing" comment="Проверка работы процесса">
+   <action set="OnControl_S=1" comment="Подаём команду 'начать работу'"/>
+   <check test="CmdLoad_C=1" comment="Подана команда 'наполнение'"/>
+   <check test="CmdUnload_C=0" comment="Нет команда 'опустошение'"/>
+   <check test="Level_AS>=90" comment="Цистерна наполняется.." timeout="15000"/>
+   <check test="CmdLoad_C=0" comment="Снята команда 'наполнение'"/>
+   <check test="CmdUnload_C=1" comment="Подана команда 'опустошение'"/>
+   <check test="Level_AS<=10" comment="Цистерна опустошается.." timeout="15000"/>
+  </test>
+  <test name="Stopped" comment="Проверка остановки процесса">
+   <action set="OnControl_S=0" comment="Снимаем команду 'начать работу'"/>
+   <check test="CmdLoad_C=0" comment="Проверка что команда 'наполнить' не меняется" holdtime="3000"/>
+   <check test="CmdUnload_C=0" comment="Проверка что команда 'опустошить' не меняется" holdtime="3000"/>
+   <check test="Level_AS<=80" comment="Уровень не меняется" holdtime="10000"/>
+  </test>
+</TestList>
+</TestScenario>
