@@ -11,6 +11,9 @@ Imitator::Imitator( UniSetTypes::ObjectId id, xmlNode* cnode, const string& pref
 {
 	if( cnode == NULL )
 		throw Exception( myname + "(Imitator): FAILED! not found confnode in confile!" );
+
+	vmonit(numCmdLoad);
+	vmonit(numCmdUnload);
 }
 // -----------------------------------------------------------------------------
 Imitator::~Imitator()
@@ -25,6 +28,7 @@ void Imitator::sensorInfo( const UniSetTypes::SensorMessage* sm )
 		{
 			myinfo << myname << "(sensorInfo): команда на 'наполнение'..." << endl;
 			askTimer(tmStep,stepTime); // запускаем таймер в работу
+			numCmdLoad++;
 		}
 	}
 	else if( sm->id == cmdUnload_c )
@@ -33,6 +37,7 @@ void Imitator::sensorInfo( const UniSetTypes::SensorMessage* sm )
 		{
 			myinfo << myname << "(sensorInfo): команда на 'опустошение'..." << endl;
 			askTimer(tmStep,stepTime); // запускаем таймер в работу
+			numCmdUnload++;
 		}
 	}
 }
@@ -43,6 +48,7 @@ void Imitator::timerInfo( const UniSetTypes::TimerMessage* tm )
 	{
 		if( in_cmdLoad_c ) // значит наполняем..
 		{
+			mylog3 << myname << "(timerInfo): таймер(" << tmStep << ").. наполняем" << endl;
 			out_Level_s += stepVal;
 			if( out_Level_s >= maxLevel )
 			{
@@ -54,6 +60,7 @@ void Imitator::timerInfo( const UniSetTypes::TimerMessage* tm )
 
 		if( in_cmdUnload_c ) // значит опустошаем
 		{
+			mylog3 << myname << "(timerInfo): таймер(" << tmStep << ")... опустошаем" << endl;
 			out_Level_s -= stepVal;
 			if( out_Level_s <= minLevel )
 			{
@@ -77,6 +84,14 @@ string Imitator::getMonitInfo()
 		s << " опустошаем.." << endl;
 
 	return std::move(s.str());
+}
+// -----------------------------------------------------------------------------
+string Imitator::getTimerName(int id)
+{
+	if( id == tmStep )
+		return "tmStep";
+
+	return "";
 }
 // -----------------------------------------------------------------------------
 

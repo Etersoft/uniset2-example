@@ -29,8 +29,11 @@ class Imitator:
 		virtual void sensorInfo( const UniSetTypes::SensorMessage* sm ) override;
 		virtual void timerInfo( const UniSetTypes::TimerMessage* tm ) override;
 		virtual std::string getMonitInfo() override;
+		virtual std::string getTimerName(int id);
 
 	private:
+		unsigned int numCmdLoad = { 0 };
+		unsigned int numCmdUnload = { 0 };
 
 };
 // -----------------------------------------------------------------------------
