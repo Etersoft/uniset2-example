@@ -17,7 +17,7 @@ class Imitator:
 	public Imitator_SK
 {
 	public:
-		Imitator( UniSetTypes::ObjectId id, xmlNode* cnode, const std::string& prefix = "" );
+		Imitator( uniset::ObjectId id, xmlNode* cnode, const std::string& prefix = "" );
 		virtual ~Imitator();
 
 		enum Timers
@@ -26,8 +26,8 @@ class Imitator:
 		};
 
 	protected:
-		virtual void sensorInfo( const UniSetTypes::SensorMessage* sm ) override;
-		virtual void timerInfo( const UniSetTypes::TimerMessage* tm ) override;
+		virtual void sensorInfo( const uniset::SensorMessage* sm ) override;
+		virtual void timerInfo( const uniset::TimerMessage* tm ) override;
 		virtual std::string getMonitInfo() override;
 		virtual std::string getTimerName(int id);
 

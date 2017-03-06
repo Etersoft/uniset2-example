@@ -3,10 +3,10 @@
 #include <Exceptions.h>
 #include "Imitator.h"
 // -----------------------------------------------------------------------------
-using namespace UniSetTypes;
+using namespace uniset;
 using namespace std;
 // -----------------------------------------------------------------------------
-Imitator::Imitator( UniSetTypes::ObjectId id, xmlNode* cnode, const string& prefix ):
+Imitator::Imitator( uniset::ObjectId id, xmlNode* cnode, const string& prefix ):
 	Imitator_SK(id, cnode, prefix)
 {
 	if( cnode == NULL )
@@ -20,7 +20,7 @@ Imitator::~Imitator()
 {
 }
 // -----------------------------------------------------------------------------
-void Imitator::sensorInfo( const UniSetTypes::SensorMessage* sm )
+void Imitator::sensorInfo( const uniset::SensorMessage* sm )
 {
 	if( sm->id == cmdLoad_c )
 	{
@@ -42,7 +42,7 @@ void Imitator::sensorInfo( const UniSetTypes::SensorMessage* sm )
 	}
 }
 // -----------------------------------------------------------------------------
-void Imitator::timerInfo( const UniSetTypes::TimerMessage* tm )
+void Imitator::timerInfo( const uniset::TimerMessage* tm )
 {
 	if( tm->id == tmStep )
 	{

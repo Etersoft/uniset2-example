@@ -19,11 +19,11 @@ class Controller:
 	public Controller_SK
 {
 	public:
-		Controller( UniSetTypes::ObjectId id, xmlNode* cnode, const std::string& prefix = "" );
+		Controller( uniset::ObjectId id, xmlNode* cnode, const std::string& prefix = "" );
 		virtual ~Controller();
 
 	protected:
-		virtual void sensorInfo( const UniSetTypes::SensorMessage* sm ) override;
+		virtual void sensorInfo( const uniset::SensorMessage* sm ) override;
 		virtual std::string getMonitInfo() override;
 
 		// обработка (реализация логики)

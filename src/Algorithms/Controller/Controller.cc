@@ -3,10 +3,10 @@
 #include <Exceptions.h>
 #include "Controller.h"
 // -----------------------------------------------------------------------------
-using namespace UniSetTypes;
+using namespace uniset;
 using namespace std;
 // -----------------------------------------------------------------------------
-Controller::Controller( UniSetTypes::ObjectId id, xmlNode* cnode, const string& prefix ):
+Controller::Controller( uniset::ObjectId id, xmlNode* cnode, const string& prefix ):
 	Controller_SK(id, cnode, prefix)
 {
 	if( cnode == NULL )
@@ -17,7 +17,7 @@ Controller::~Controller()
 {
 }
 // -----------------------------------------------------------------------------
-void Controller::sensorInfo(const UniSetTypes::SensorMessage* sm)
+void Controller::sensorInfo(const uniset::SensorMessage* sm)
 {
 	if( sm->id == OnControl_s )
 	{

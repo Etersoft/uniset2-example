@@ -1,8 +1,9 @@
 #include <UniSetActivator.h>
+#include <UHelpers.h>
 #include "UniSetExampleConfiguration.h"
 #include "Controller.h"
 // -----------------------------------------------------------------------------
-using namespace UniSetTypes;
+using namespace uniset;
 using namespace std;
 // -----------------------------------------------------------------------------
 int main( int argc, const char** argv )
@@ -12,7 +13,7 @@ int main( int argc, const char** argv )
 		auto conf = uniset_init(argc, argv);
 		auto act = UniSetActivator::Instance();
 
-		auto cn = UniSetExample::make_object<Controller>("Controller1", "Controller");
+		auto cn = uniset::make_object<Controller>("Controller1", "Controller");
 		act->add(cn);
 
 		SystemMessage sm(SystemMessage::StartUp);
@@ -21,7 +22,7 @@ int main( int argc, const char** argv )
 		act->run(false);
 		return 0;
 	}
-	catch( const Exception& ex )
+	catch( const uniset::Exception& ex )
 	{
 		cerr << "(controller): " << ex << endl;
 	}

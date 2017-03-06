@@ -1,8 +1,9 @@
 #include <UniSetActivator.h>
+#include <UHelpers.h>
 #include "UniSetExampleConfiguration.h"
 #include "Imitator.h"
 // -----------------------------------------------------------------------------
-using namespace UniSetTypes;
+using namespace uniset;
 using namespace std;
 // -----------------------------------------------------------------------------
 int main( int argc, const char** argv )
@@ -13,7 +14,7 @@ int main( int argc, const char** argv )
 		auto act = UniSetActivator::Instance();
 
 		// Управление СЭС
-		auto im = UniSetExample::make_object<Imitator>("Imitator1", "Imitator");
+		auto im = uniset::make_object<Imitator>("Imitator1", "Imitator");
 		act->add(im);
 
 		SystemMessage sm(SystemMessage::StartUp);
@@ -22,7 +23,7 @@ int main( int argc, const char** argv )
 		act->run(false);
 		return 0;
 	}
-	catch( const Exception& ex )
+	catch( const uniset::Exception& ex )
 	{
 		cerr << "(imitator): " << ex << endl;
 	}
